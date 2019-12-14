@@ -26,7 +26,6 @@ def main1():
     C = A + B
     pprint(C)
     pprint(C.subs('a', 23))
-    print(type(A[0][0]))
 
 
 def main():
@@ -61,4 +60,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main1()

@@ -40,7 +40,7 @@ class Menu:
         return ('Izaberite jednu od sledecih opcija:\n' +
                 '1. Unos matrice\n' +
                 '2. Prikaz matrice\n' +
-                '3. Zamenjivanje simbolicke vrednosti u matrici\n' +
+                '3. Zamenjivanje simbolickih vrednosti u matrici\n' +
                 '4. Izracunavanje opsteg {1}-inverza\n' +
                 '5. Izracunavanje opsteg {1, 2}-inverza\n' +
                 '6. Izracunavanje opsteg {1, 3}-inverza\n' +
@@ -74,8 +74,8 @@ class Menu:
 
         input_not_correct = True
         while input_not_correct:
-            m = int(input('\nBroj vrsta matrice: '))
-            n = int(input('Broj kolona matrice: '))
+            m = int(input('\nBroj vrsta u matrici: '))
+            n = int(input('Broj kolona u matrici: '))
             print('\nUnesite matricu:')
             self.user_matrix = self.calculator.load_matrix(m, n)
             if self.user_matrix is None:
@@ -92,10 +92,8 @@ class Menu:
         else:
             symbols_to_replace = input('\nUnesite oznake simbola koje zelite da zamenite: ').split()
             values_to_insert = input('Unesite vrednosti kojima zelite da zamenite navedene simbole, u redosledu navodjenja: ').split()
-            print(symbols_to_replace)
-            print(values_to_insert)
             print()
-            self.user_matrix = self.user_matrix.subs(zip(symbols_to_replace, values_to_insert))
+            self.user_matrix = self.user_matrix.subs(list(zip(symbols_to_replace, values_to_insert)))
 
     def find_general_1_inverse(self):
         if self.user_matrix is None:
