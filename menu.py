@@ -1,9 +1,7 @@
 """Module for handling user requests."""
 
-# from calculator import Calculator
-from operations import *
-
-__version__ = '1.0'
+from sympy import *
+from calculator import Calculator
 
 
 class Menu:

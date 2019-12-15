@@ -2,8 +2,6 @@
 
 from sympy import *
 
-__version__ = '1.0'
-
 
 class Calculator:
     def __init__(self):
