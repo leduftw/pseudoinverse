@@ -1,5 +1,6 @@
 """Module for handling user requests."""
 
+# from calculator import Calculator
 from operations import *
 
 __version__ = '1.0'
@@ -83,15 +84,28 @@ class Menu:
             else:
                 input_not_correct = False
         print()
-        self.user_matrix = Matrix([self.user_matrix[row] for row in range(m)])
+        self.user_matrix = Matrix([self.user_matrix[row] for row in range(m)])  # changing matrix to sympy Matrix object
         self.user_matrix_loaded = True
+
+    @staticmethod
+    def print_matrix(matrix):
+        print()
+        pprint(matrix)
+        print()
+
+    def handle_printing(self, matrix):
+        if matrix is None:
+            print('Matrica ne postoji!\n')
+        else:
+            self.print_matrix(matrix)
 
     def handle_substitution(self):
         if self.user_matrix is None:
             print('Matrica nije uneta! Prvo unesite matricu, a zatim pokusajte ponovo.\n')
         else:
             symbols_to_replace = input('\nUnesite oznake simbola koje zelite da zamenite: ').split()
-            values_to_insert = input('Unesite vrednosti kojima zelite da zamenite navedene simbole, u redosledu navodjenja: ').split()
+            values_to_insert = input(
+                'Unesite vrednosti kojima zelite da zamenite navedene simbole, u redosledu navodjenja: ').split()
             print()
             self.user_matrix = self.user_matrix.subs(list(zip(symbols_to_replace, values_to_insert)))
 
@@ -101,7 +115,7 @@ class Menu:
         else:
             self.general_1_inverse = self.calculator.calculate_general_1_inverse(self.user_matrix)
             self.general_1_inverse_calculated = True
-            handle_printing(self.general_1_inverse)
+            self.handle_printing(self.general_1_inverse)
 
     def find_general_12_inverse(self):
         if self.user_matrix is None:
@@ -109,7 +123,7 @@ class Menu:
         else:
             self.general_12_inverse = self.calculator.calculate_general_12_inverse(self.user_matrix)
             self.general_12_inverse_calculated = True
-            handle_printing(self.general_12_inverse)
+            self.handle_printing(self.general_12_inverse)
 
     def find_general_13_inverse(self):
         if self.user_matrix is None:
@@ -117,7 +131,7 @@ class Menu:
         else:
             self.general_13_inverse = self.calculator.calculate_general_13_inverse(self.user_matrix)
             self.general_13_inverse_calculated = True
-            handle_printing(self.general_13_inverse)
+            self.handle_printing(self.general_13_inverse)
 
     def find_general_14_inverse(self):
         if self.user_matrix is None:
@@ -125,7 +139,7 @@ class Menu:
         else:
             self.general_14_inverse = self.calculator.calculate_general_14_inverse(self.user_matrix)
             self.general_14_inverse_calculated = True
-            handle_printing(self.general_14_inverse)
+            self.handle_printing(self.general_14_inverse)
 
     def find_moore_penrose_inverse(self):
         if self.user_matrix is None:
@@ -133,24 +147,14 @@ class Menu:
         else:
             self.moore_penrose_inverse = self.calculator.calculate_moore_penrose_inverse(self.user_matrix)
             self.moore_penrose_inverse_calculated = True
-            handle_printing(self.moore_penrose_inverse)
+            self.handle_printing(self.moore_penrose_inverse)
 
 
+'''
 def char_range(c1, c2):
     """
     Generates the characters from `c1` to `c2`, inclusive.
     """
     for c in range(ord(c1), ord(c2) + 1):
         yield chr(c)
-
-
-def print_matrix(matrix):
-    pprint(matrix)
-    print()
-
-
-def handle_printing(matrix):
-    if matrix is None:
-        print('Matrica ne postoji!\n')
-    else:
-        print_matrix(matrix)
+'''

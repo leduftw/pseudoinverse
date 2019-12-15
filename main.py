@@ -1,3 +1,5 @@
+# from menu import Menu
+
 from operations import *
 from utils import *
 import timeit
@@ -13,11 +15,13 @@ def load_matrix():
 
 # For testing only
 def main1():
+    """
     keys = [c for c in char_range('a', 'z')]
     values = [Symbol(c) for c in keys]
     symbol_dict = {k: v for (k, v) in zip(keys, values)}
     # print(symbol_dict)
     A, m, n = load_matrix()
+
     A = Matrix([A[row] for row in range(m)])
     pprint(A)
     B, m, n = load_matrix()
@@ -26,7 +30,43 @@ def main1():
     C = A + B
     pprint(C)
     pprint(C.subs('a', 23))
+    """
+    menu = Menu()
+    menu.handle_loading()
+    A = menu.user_matrix
+    m, n = A.shape
+    temp = A.row_join(eye(m))
+    pprint(A)
+    pprint(temp)
+    """
+    print(m, n)
+    A = A.col_insert(n, eye(m))
+    pprint(A)
+    A = A.rref(pivots=False)
+    pprint(A)
+    P = A[: m, n: m + n]
+    pprint(P)
+    A = A[: m, : n]
+    A = A.row_insert(m, zeros(1, n))
+    pprint(A)
+    """
+    """
+    A = A.T
+    A = A.col_insert(m, eye(n))
+    pprint(A)
+    A = A.rref(pivots=False)
+    pprint(A)
+    A = A.T
+    Q = A[m: m + n, : n]
+    pprint(Q)
+    """
 
+
+def main2():
+    menu = Menu()
+    menu.handle_loading()
+    A = menu.user_matrix
+    pprint(A.pinv())
 
 def main():
     init_printing(use_unicode=True)
@@ -40,7 +80,7 @@ def main():
         if command == 1:  # matrix loading
             menu.handle_loading()
         elif command == 2:  # matrix printing
-            handle_printing(menu.user_matrix)
+            menu.handle_printing(menu.user_matrix)
         elif command == 3:  # symbol substitution
             menu.handle_substitution()
         elif command == 4:  # general {1}-inverse
@@ -60,4 +100,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main1()
+    main()
