@@ -11,26 +11,14 @@ class Menu:
 
         # Matrices
         self.user_matrix = None
+        self.P = None
+        self.Q = None
+        self.R = None
         self.general_1_inverse = None
         self.general_12_inverse = None
         self.general_13_inverse = None
         self.general_14_inverse = None
         self.moore_penrose_inverse = None
-
-        # Flags
-        self.user_matrix_loaded = False
-        self.general_1_inverse_calculated = False
-        self.general_12_inverse_calculated = False
-        self.general_13_inverse_calculated = False
-        self.general_14_inverse_calculated = False
-        self.moore_penrose_inverse_calculated = False
-
-        '''
-        # Internal data structures
-        keys = [c for c in char_range('a', 'z')]
-        values = [Symbol(c) for c in keys]
-        self.symbol_dictionary = {k: v for (k, v) in zip(keys, values)}
-        '''
 
     def __str__(self):
         """
@@ -50,26 +38,17 @@ class Menu:
 
     def reset_matrices(self):
         self.user_matrix = None
+        self.P = None
+        self.Q = None
+        self.R = None
         self.general_1_inverse = None
         self.general_12_inverse = None
         self.general_13_inverse = None
         self.general_14_inverse = None
         self.moore_penrose_inverse = None
 
-    def reset_flags(self):
-        self.user_matrix_loaded = False
-        self.general_1_inverse_calculated = False
-        self.general_12_inverse_calculated = False
-        self.general_13_inverse_calculated = False
-        self.general_14_inverse_calculated = False
-        self.moore_penrose_inverse_calculated = False
-
-    def clear_all(self):
-        self.reset_matrices()
-        self.reset_flags()
-
     def handle_loading(self):
-        self.clear_all()
+        self.reset_matrices()
 
         input_not_correct = True
         while input_not_correct:
@@ -82,24 +61,28 @@ class Menu:
             else:
                 input_not_correct = False
         print()
-        self.user_matrix = Matrix([self.user_matrix[row] for row in range(m)])  # changing matrix to sympy Matrix object
-        self.user_matrix_loaded = True
+        self.user_matrix = Matrix(
+            [self.user_matrix[row] for row in range(m)])  # converting matrix to sympy Matrix object
 
     @staticmethod
-    def print_matrix(matrix):
-        print()
+    def print_matrix(matrix, message=''):
+        print(message)
         pprint(matrix)
         print()
 
-    def handle_printing(self, matrix):
+    def handle_printing(self, matrix, message='', err='Matrica ne postoji!\n'):
         if matrix is None:
-            print('Matrica ne postoji!\n')
+            print(err)
         else:
-            self.print_matrix(matrix)
+            self.print_matrix(matrix, message)
+
+    @staticmethod
+    def user_matrix_not_loaded_message(message='Matrica nije uneta! Prvo unesite matricu, a zatim pokusajte ponovo.\n'):
+        print(message)
 
     def handle_substitution(self):
         if self.user_matrix is None:
-            print('Matrica nije uneta! Prvo unesite matricu, a zatim pokusajte ponovo.\n')
+            self.user_matrix_not_loaded_message()
         else:
             symbols_to_replace = input('\nUnesite oznake simbola koje zelite da zamenite: ').split()
             values_to_insert = input(
@@ -107,52 +90,65 @@ class Menu:
             print()
             self.user_matrix = self.user_matrix.subs(list(zip(symbols_to_replace, values_to_insert)))
 
-    def find_general_1_inverse(self):
+    def handle_inverse(self, general_1_inverse=False, general_12_inverse=False, general_13_inverse=False, general_14_inverse=False, moore_penrose_inverse=False):
         if self.user_matrix is None:
-            print('Matrica nije uneta! Prvo unesite matricu, a zatim pokusajte ponovo.\n')
+            self.user_matrix_not_loaded_message()
         else:
-            self.general_1_inverse = self.calculator.calculate_general_1_inverse(self.user_matrix)
-            self.general_1_inverse_calculated = True
-            self.handle_printing(self.general_1_inverse)
+            # First find P and Q
+            if self.P is None or self.Q is None:
+                self.P, self.Q = self.calculator.calculate_P_Q(self.user_matrix)
+
+            # And then find particular inverse
+            if general_1_inverse:
+                self.R = self.calculator.calculate_general_1_inverse(self.user_matrix)
+                self.general_1_inverse = block_collapse(self.Q * self.R * self.P)
+            elif general_12_inverse:
+                self.R = self.calculator.calculate_general_12_inverse(self.user_matrix)
+                self.general_12_inverse = block_collapse(self.Q * self.R * self.P)
+            elif general_13_inverse:
+                self.R = self.calculator.calculate_general_13_inverse(self.user_matrix, self.P)
+                self.general_13_inverse = block_collapse(self.Q * self.R * self.P)
+            elif general_14_inverse:
+                self.R = self.calculator.calculate_general_14_inverse(self.user_matrix, self.Q)
+                self.general_14_inverse = block_collapse(self.Q * self.R * self.P)
+            elif moore_penrose_inverse:
+                self.R = self.calculator.calculate_moore_penrose_inverse(self.user_matrix, self.P, self.Q)
+                self.moore_penrose_inverse = block_collapse(self.Q * self.R * self.P)
+            else:
+                print('Bad arguments passed.')  # this should never happen if used properly
+                return
+
+            # Print Q, R and P
+            self.handle_printing(self.Q, 'Q = ')
+            self.handle_printing(self.R, 'R = ')
+            self.handle_printing(self.P, 'P = ')
+
+            # Print requested inverse (Q * R * P)
+            # self.handle_printing(self.Q * self.R * self.P, 'X = Q * R * P = ')
+            msg = 'X = Q * R * P = '
+            if general_1_inverse:
+                self.handle_printing(self.general_1_inverse, message=msg)
+            elif general_12_inverse:
+                self.handle_printing(self.general_12_inverse, message=msg)
+            elif general_13_inverse:
+                self.handle_printing(self.general_13_inverse, message=msg)
+            elif general_14_inverse:
+                self.handle_printing(self.general_14_inverse, message=msg)
+            elif moore_penrose_inverse:
+                self.handle_printing(self.moore_penrose_inverse, message=msg)
+                self.handle_printing(self.user_matrix.pinv().applyfunc(simplify), message="= ")
+
+    def find_general_1_inverse(self):
+        self.handle_inverse(general_1_inverse=True)
 
     def find_general_12_inverse(self):
-        if self.user_matrix is None:
-            print('Matrica nije uneta! Prvo unesite matricu, a zatim pokusajte ponovo.\n')
-        else:
-            self.general_12_inverse = self.calculator.calculate_general_12_inverse(self.user_matrix)
-            self.general_12_inverse_calculated = True
-            self.handle_printing(self.general_12_inverse)
+        self.handle_inverse(general_12_inverse=True)
 
     def find_general_13_inverse(self):
-        if self.user_matrix is None:
-            print('Matrica nije uneta! Prvo unesite matricu, a zatim pokusajte ponovo.\n')
-        else:
-            self.general_13_inverse = self.calculator.calculate_general_13_inverse(self.user_matrix)
-            self.general_13_inverse_calculated = True
-            self.handle_printing(self.general_13_inverse)
+        self.handle_inverse(general_13_inverse=True)
 
     def find_general_14_inverse(self):
-        if self.user_matrix is None:
-            print('Matrica nije uneta! Prvo unesite matricu, a zatim pokusajte ponovo.\n')
-        else:
-            self.general_14_inverse = self.calculator.calculate_general_14_inverse(self.user_matrix)
-            self.general_14_inverse_calculated = True
-            self.handle_printing(self.general_14_inverse)
+        self.handle_inverse(general_14_inverse=True)
 
     def find_moore_penrose_inverse(self):
-        if self.user_matrix is None:
-            print('Matrica nije uneta! Prvo unesite matricu, a zatim pokusajte ponovo.\n')
-        else:
-            self.moore_penrose_inverse = self.calculator.calculate_moore_penrose_inverse(self.user_matrix)
-            self.moore_penrose_inverse_calculated = True
-            self.handle_printing(self.moore_penrose_inverse)
-
-
-'''
-def char_range(c1, c2):
-    """
-    Generates the characters from `c1` to `c2`, inclusive.
-    """
-    for c in range(ord(c1), ord(c2) + 1):
-        yield chr(c)
-'''
+        self.handle_inverse(moore_penrose_inverse=True)
