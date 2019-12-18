@@ -95,8 +95,14 @@ class Menu:
             self.user_matrix_not_loaded_message()
         else:
             # First find P and Q
-            if self.P is None or self.Q is None:
+            self.P, self.Q = self.calculator.calculate_P_Q(self.user_matrix)
+            '''
+            try:
                 self.P, self.Q = self.calculator.calculate_P_Q(self.user_matrix)
+            except TypeError:
+                print("Nije moguce izracunati trazeni pesudoinverz.\n")
+                return
+            '''
 
             # And then find particular inverse
             if general_1_inverse:

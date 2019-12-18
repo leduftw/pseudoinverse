@@ -52,7 +52,8 @@ class Calculator:
 
             if A[i, j] != 0:
                 # 2. step: Divide the ith row by A[i, j] to make the pivot entry = 1.
-                k = Rational(1, A[i, j])
+                # k = Rational(1, A[i, j])
+                k = 1 / A[i, j]
                 if k != 1:
                     A = A.elementary_row_op(op='n->kn', row=i, k=k)
                     P = P.elementary_row_op(op='n->kn', row=i, k=k)
@@ -88,7 +89,8 @@ class Calculator:
 
             if A[i, j] != 0:
                 # 2. step: Divide the jth column by A[i, j] to make the pivot entry = 1.
-                k = Rational(1, A[i, j])
+                # k = Rational(1, A[i, j])
+                k = 1 / A[i, j]
                 if k != 1:
                     A = A.elementary_col_op(op='n->kn', col=j, k=k)
                     Q = Q.elementary_col_op(op='n->kn', col=j, k=k)
