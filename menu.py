@@ -125,7 +125,7 @@ class Menu:
                 return
 
             # Print Q, R and P
-            self.handle_printing(self.Q, 'Q = ')
+            self.handle_printing(self.Q, '\nQ = ')
             self.handle_printing(self.R, 'R = ')
             self.handle_printing(self.P, 'P = ')
 
