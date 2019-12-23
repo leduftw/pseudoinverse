@@ -142,6 +142,7 @@ class Menu:
                 self.handle_printing(self.general_14_inverse, message=msg)
             elif moore_penrose_inverse:
                 self.handle_printing(self.moore_penrose_inverse, message=msg)
+                # Removing applyfunc(simplify) can massively reduce computation and save time
                 self.handle_printing(self.user_matrix.pinv().applyfunc(simplify), message="= ")
 
     def find_general_1_inverse(self):

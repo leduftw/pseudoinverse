@@ -6,7 +6,7 @@ __version__ = '1.0'
 
 
 def main():
-    init_printing(use_unicode=True, use_latex='mathjax')
+    init_printing(use_latex='mathjax')
     menu = Menu()
 
     while True:
