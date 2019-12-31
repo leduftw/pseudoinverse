@@ -2,6 +2,7 @@
 from sympy import *
 from menu import Menu
 
+__author__ = 'Dusko Sretenovic'
 __version__ = '1.0'
 
 
