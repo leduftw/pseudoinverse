@@ -1,7 +1,8 @@
 # Ignore everything
 *
 
-# But don't ignore .py files, .gitignore and Seminarski rad.pdf
-!*.py
+# But don't ignore src, and Seminarski rad.pdf
+!/src
+!/src/*
 !.gitignore
 !Seminarski rad.pdf
