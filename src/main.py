@@ -1,4 +1,3 @@
-
 from sympy import *
 from menu import Menu
 

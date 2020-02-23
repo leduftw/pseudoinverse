@@ -90,7 +90,8 @@ class Menu:
             print()
             self.user_matrix = self.user_matrix.subs(list(zip(symbols_to_replace, values_to_insert)))
 
-    def handle_inverse(self, general_1_inverse=False, general_12_inverse=False, general_13_inverse=False, general_14_inverse=False, moore_penrose_inverse=False):
+    def handle_inverse(self, general_1_inverse=False, general_12_inverse=False, general_13_inverse=False,
+                       general_14_inverse=False, moore_penrose_inverse=False):
         if self.user_matrix is None:
             self.user_matrix_not_loaded_message()
         else:
