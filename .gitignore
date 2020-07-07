@@ -1,7 +1,7 @@
 # Ignore everything
 *
 
-# But don't ignore src, and Seminarski rad.pdf
+# But don't ignore src and Seminarski rad.pdf
 !/src
 !/src/*
 !.gitignore
