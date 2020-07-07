@@ -1,4 +1,4 @@
-"""Module for calculating pseudoinverses"""
+""" Module for calculating pseudoinverses. """
 
 from sympy import *
 
