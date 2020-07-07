@@ -1,4 +1,4 @@
-"""Module for handling user requests."""
+""" Module for handling user requests. """
 
 from sympy import *
 from calculator import Calculator
