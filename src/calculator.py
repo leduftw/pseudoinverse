@@ -33,6 +33,7 @@ class Calculator:
             if A[i, column] != 0:
                 return column
         return None
+
     def gauss_jordan_row(self, A):
         m, n = A.shape
         P = eye(m)
