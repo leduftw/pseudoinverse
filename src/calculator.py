@@ -16,18 +16,18 @@ class Calculator:
                 return None
         return matrix
 
-    # Greedy
     @staticmethod
     def find_row(A, i, j):
+        """ Greedy. """
         m, n = A.shape
         for row in range(i + 1, m):
             if A[row, j] != 0:
                 return row
         return None
 
-    # Greedy
     @staticmethod
     def find_column(A, i, j):
+        """ Greedy. """
         m, n = A.shape
         for column in range(j + 1, n):
             if A[i, column] != 0:
